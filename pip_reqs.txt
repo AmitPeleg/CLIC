@@ -1,0 +1,12 @@
+open_clip_torch==2.31
+matplotlib==3.10
+spacy==3.8
+spicy
+easydict
+transformers
+openai-clip
+wandb
+pandas
+datasets==3.3.1 
+torchmetrics==1.4
+huggingface-hub

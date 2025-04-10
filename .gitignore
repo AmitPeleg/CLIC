@@ -1,0 +1,8 @@
+output
+data
+wandb
+__pycache__
+.idea
+
+*.pt
+.DS_Store
