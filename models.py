@@ -21,7 +21,9 @@ MODELKEYS = {
     'con-CLIP': 'con-CLIP',
     'CLIPS': 'CLIPS',
     'CLIPA': 'CLIPA',
-    'EVA': 'EVA'
+    'EVA': 'EVA',
+    'ViT-H-14': 'laion2b_s32b_b79k',
+    'ViT-bigG-14': 'laion2b_s39b_b160k'
 }
 
 
@@ -167,6 +169,11 @@ def get_model_clip(args):
             # since clips is notyet on openclip
             from clips import get_tokenizer
             tokeniz = get_tokenizer('hf-hub:UCSC-VLAA/ViT-L-14-CLIPS-224-Recap-DataComp-1B')
+        tokenizer = lambda x: tokeniz(x).squeeze()
+
+    elif args.model == 'ViT-H-14' or args.model == 'ViT-bigG-14':
+        model, _, train_transform = open_clip.create_model_and_transforms(args.model, pretrained=MODELKEYS[args.model])
+        tokeniz = open_clip.get_tokenizer(args.model)
         tokenizer = lambda x: tokeniz(x).squeeze()
 
     else:

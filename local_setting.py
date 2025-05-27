@@ -16,9 +16,10 @@ PIXPROSE_CSV_FILE = DATA_DIR / "redcaps_pixelprose" / "redcaps_pixelprose.csv"
 
 # Evaluation data
 IMAGENET_DIR = DATA_DIR / "imagenet"
+ZS_DIR = DATA_DIR
 COCO2017_TRAIN_DIR = DATA_DIR / "train2017"
-COCO2014_DIR = DATA_DIR / "coco"
 COCO2017_DIR = DATA_DIR / "coco"
+COCO2017_ANNOTATIONS_DIR = DATA_DIR / "coco"
 FLICKR30K_DIR = DATA_DIR / "flickr30k"
 SUGARCREPE_DATA_DIR = DATA_DIR / "sugarcrepe"
 SUGARCREPE_PP_DATA_DIR = DATA_DIR / "SugarCrepe_pp/data"

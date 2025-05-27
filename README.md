@@ -98,7 +98,7 @@ bash trigger_train.sh
 bash trigger_train_negclip.sh
 ```
 
-#### For training the baseline of CLIC (Single-Image Baseline in Table 3):
+#### For training the baseline of CLIC (Single-Image Baseline in Table 10):
 ```bash
 bash trigger_train_baseline.sh
 ```

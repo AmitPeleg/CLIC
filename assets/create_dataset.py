@@ -111,7 +111,6 @@ def filter_single_file(input_file, output_file, prefixes):
     print(f"New file created with {len(new_rows)} rows at: {output_file}")
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Filter captions from a CSV file.")
     parser.add_argument('--input_file', type=str, required=True, help='Path to the input CSV file.')

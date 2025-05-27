@@ -22,3 +22,4 @@ torchrun --nproc_per_node=${WORLD_SIZE} --nnodes=1 --master_port=${MASTER_PORT} 
 --hard_negative_freq 1 \
 --additional_positives 2 \
 --clip_loss_iterate \
+--no_eval \

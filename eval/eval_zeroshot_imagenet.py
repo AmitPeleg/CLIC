@@ -166,7 +166,7 @@ def zero_shot_classifications(args, model, model_name, pretrained_checkpoint, pr
 
     # Data loading code
     print("... creating dataset")
-    dataset_root = args.dataset_root.format(dataset=dataset_name, dataset_cleaned=dataset_name.replace("/", "-"))
+    dataset_root = args.zs_dataset_root
 
     dataset = build_dataset(
         dataset_name=dataset_name,
@@ -239,6 +239,7 @@ def zero_shot_all_classifications(args, model, model_name, pretrained_checkpoint
 
     dataset_list = ['food101', 'cifar10', 'cifar100', 'cars', 'fgvc_aircraft', 'dtd', 'pets', 'caltech101',
                     'flowers', 'country211']
+
     accs = []
     for dataset_name in dataset_list:
         accs.append(zero_shot_classifications(args, model, model_name, pretrained_checkpoint, preprocess_val, tokenizer,

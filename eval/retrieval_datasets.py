@@ -49,7 +49,7 @@ def pre_caption(caption, max_words=50):
 
 
 class COCO_Retrieval(Dataset):
-    def __init__(self, root_dir, image_preprocess=None, max_words=30, split="test",
+    def __init__(self, annotations_root_dir, images_root_dir, image_preprocess=None, max_words=30, split="test",
                  image_perturb_fn=None, download=False):
         """
         COCO Retrieval Dataset.
@@ -60,8 +60,8 @@ class COCO_Retrieval(Dataset):
         image_perturb_fn: image perturbation function for patch permutation experiments.
         download: Whether to download the dataset if it does not exist.
         """
-        self.root_dir = root_dir
-        if not os.path.exists(root_dir):
+        self.root_dir = annotations_root_dir
+        if not os.path.exists(annotations_root_dir):
             print("Directory for COCO could not be found!")
             if download:
                 print("Downloading COCO now.")
@@ -73,12 +73,12 @@ class COCO_Retrieval(Dataset):
         urls = {'val': 'https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_val.json',
                 'test': 'https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_test.json'}
         filenames = {'val': 'coco_karpathy_val.json', 'test': 'coco_karpathy_test_2017.json'}  # updated to 2017
-        download_url(urls[split], root_dir)
+        download_url(urls[split], annotations_root_dir)
 
-        self.annotation = json.load(open(os.path.join(root_dir, filenames[split])))
+        self.annotation = json.load(open(os.path.join(annotations_root_dir, filenames[split])))
         self.image_preprocess = image_preprocess
         self.image_perturb_fn = image_perturb_fn
-        self.image_root = root_dir
+        self.image_root = images_root_dir
 
         self.text = []
         self.image = []

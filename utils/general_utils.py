@@ -4,7 +4,7 @@ import os
 import torch
 import torch.distributed as dist
 
-from local_setting import COGVLM_CSV_FILE, PIXPROSE_CSV_FILE, COGVLM_DATA_DIR
+from local_setting import COGVLM_CSV_FILE, PIXPROSE_CSV_FILE, COGVLM_DATA_DIR, PIXPROSE_DATA_DIR
 
 
 def setup_for_distributed(is_master):
@@ -122,6 +122,6 @@ class NewParser(argparse.ArgumentParser):
             args.root = COGVLM_DATA_DIR
         elif args.dataset == 'redcaps_pixelprose':
             args.train_data = PIXPROSE_CSV_FILE
-            args.root = COGVLM_DATA_DIR
+            args.root = PIXPROSE_DATA_DIR
         else:
             raise RuntimeError("Unknown dataset")

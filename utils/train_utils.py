@@ -132,10 +132,11 @@ def backward_and_update(loss, model, optimizer, scaler):
 
 
 def print_data(args, data_iter, loss_dict, metrics, model, optimizer, progress, tokenizer, val_loader):
-    if data_iter % (args.print_freq * 30) == 0 and data_iter > 0:
-        model.eval()
-        validate_zeroshot(val_loader, model, tokenizer, args, mid=True)
-        model.train()
+    if not args.no_eval:
+        if data_iter % (args.print_freq * 30) == 0 and data_iter > 0:
+            model.eval()
+            validate_zeroshot(val_loader, model, tokenizer, args, mid=True)
+            model.train()
 
     if data_iter % args.print_freq == 0 and data_iter > 0 or data_iter == 5:
         progress.display(data_iter)

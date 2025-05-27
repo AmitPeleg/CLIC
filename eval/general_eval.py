@@ -281,12 +281,12 @@ def zero_shot_retrival(args, model, model_name, pretrained_checkpoint, preproces
     model = CLIPWrapper(model, device, tokenizer)
 
     if dataset_name == "coco2017_retrival":
+        annotations_dir = Path(args.coco2017_annotation_root)
         data_dir = Path(args.coco2017_image_root)
-        # data_dir.mkdir(parents=True, exist_ok=True)
         max_words = 30
         split = "test"
-        dataset = COCO_Retrieval(root_dir=data_dir, split=split, image_preprocess=preprocess_val, image_perturb_fn=None,
-                                 max_words=max_words,
+        dataset = COCO_Retrieval(annotations_root_dir=annotations_dir, images_root_dir=data_dir, split=split,
+                                 image_preprocess=preprocess_val, image_perturb_fn=None, max_words=max_words,
                                  download=False)
     elif dataset_name == "flickr30k_retrival":
         data_dir = Path(args.flickr30k_image_root)
@@ -369,7 +369,6 @@ def main(args, modelPath=None):
                               save_scores=True)
         print(met)
         return met
-
     elif args.evaluation_metric == "coco2017_retrival":  # taken from aro
         ret = zero_shot_retrival(args, model, model_name, pretrained_checkpoint, preprocess_val, tokenizer, device,
                                  "coco2017_retrival")
@@ -403,7 +402,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--evaluation_metric",
-        default="coco2014_retrival",
+        default="coco2017_retrival",
         type=str,
         help="metric to evaluate on",
     )
@@ -414,16 +413,16 @@ if __name__ == "__main__":
         type=str,
         help="path to imagenet dataset",
     )
-    parser.add_argument(
-        "--coco2014_image_root",
-        default=str(local_setting.COCO2014_DIR),
-        type=str,
-        help="path to coco test2014 dataset",
-    )
 
     parser.add_argument(
         "--coco2017_image_root",
         default=str(local_setting.COCO2017_DIR),
+        type=str,
+        help="path to coco val2017 dataset",
+    )
+    parser.add_argument(
+        "--coco2017_annotation_root",
+        default=str(local_setting.COCO2017_ANNOTATIONS_DIR),
         type=str,
         help="path to coco val2017 dataset",
     )
@@ -457,8 +456,8 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--dataset_root",
-        default="/mnt/datasets/",
+        "--zs_dataset_root",
+        default=str(local_setting.ZS_DIR),
         type=str,
         help="zero shot classification",
     )

@@ -17,4 +17,4 @@ torchrun --nproc_per_node=${WORLD_SIZE} --nnodes=1 --master_port=${MASTER_PORT} 
 --freeze_only_vision \
 --hard_negatives \
 --no_concat \
-
+--no_eval \

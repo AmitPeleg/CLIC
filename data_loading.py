@@ -95,11 +95,10 @@ class CsvDataset(Dataset):
     def __getitem__(self, idx):
         images = self.transforms(Image.open(str(self.image_paths[idx])).convert('RGBA'))
         caption = self.captions[idx]
+        texts = self.tokenizer(caption)
         if self.hard_negatives:
             hard_negative = get_hard_neg_single_sentence(caption)
             hard_negative = self.tokenizer(hard_negative)
-        texts = self.tokenizer(caption)
-        if self.hard_negatives:
             return images, texts, hard_negative
         else:
             return images, texts
@@ -178,32 +177,40 @@ class CombineCsvDataset(CsvDataset):
         p2 = self.tokenizer(p2)
         neg = self.tokenizer(neg)
 
-        if self.clip_loss_iterate:
+        if self.clip_loss_iterate or self.baseline:
             # Handle baseline for the ablation study
             if self.baseline:
                 neg1 = get_hard_neg_single_sentence(first_sentence_caption1)
                 neg1 = self.tokenizer(neg1)
                 additional_positives_caption1 = [self.tokenizer(pos) for pos in additional_positives_caption1]
 
-            # Handle CLIP loss iteration specific processing
+            # Handle CLIP loss iteration or baselines processing
             single_text = self.tokenizer(first_sentence_caption1)
             single_image = concatenated_img[0]
             concatenated_img = concatenated_img[1]
 
-        # Case 1: Baseline with 4 positives and one negative, for ablation study
+        # Case 1: Baselines for ablation study
         if self.baseline:
-            if not self.clip_loss_iterate or not self.additional_positives:
-                raise NotImplementedError("Baseline requires CLIP loss iteration and additional positives")
-            return single_image, single_text, single_text, *additional_positives_caption1, neg1, single_image, single_text
+            if self.additional_positives and self.hard_negatives and self.shuffled_positive:
+                if self.clip_loss_iterate:
+                    return single_image, single_text, single_text, *additional_positives_caption1, neg1, single_image, single_text
+                else:
+                    return single_image, single_text, single_text, *additional_positives_caption1, neg1
+            else:
+                raise NotImplementedError("Baseline requires hard negatives, shuffled positive, additional positives")
 
         # Case 2: Standard case from the paper (p1, p2, additional positives, hard negative)
         if self.additional_positives:
+            if not self.hard_negatives:
+                raise NotImplementedError("Additional positives require hard negatives")
             if self.shuffled_positive:
                 if self.clip_loss_iterate:
                     return concatenated_img, p1, p2, *additional_pos, neg, single_image, single_text
                 return concatenated_img, p1, p2, *additional_pos, neg
             else:
-                raise NotImplementedError("No implementation for additional positives without shuffled positives")
+                if self.clip_loss_iterate:
+                    return concatenated_img, p1, *additional_pos, neg, single_image, single_text
+                return concatenated_img, p1, *additional_pos, neg
 
         # Case 3: Ablation with only p1, p2 and hard negative
         if self.shuffled_positive:
@@ -213,24 +220,39 @@ class CombineCsvDataset(CsvDataset):
                 return concatenated_img, p1, p2, neg, single_image, single_text
             return concatenated_img, p1, p2, neg
 
-        # clip loss iteration is done only for ablations
+        # Case 4: Ablation with only p1, and hard negative
+        if self.hard_negatives:
+            if self.clip_loss_iterate:
+                return concatenated_img, p1, neg, single_image, single_text
+            return concatenated_img, p1, neg
+
+        # training without clip loss iteration is done only for ablations
         if self.clip_loss_iterate:
             raise NotImplementedError("CLIP loss iteration not implemented without additional positives")
-
-        # Case 4: Ablation with only hard negative
-        if self.hard_negatives:
-            return concatenated_img, p1, neg
 
         # Case 5: Ablation with only p1
         return concatenated_img, p1
 
-    def get_random_image_with_specific_ratio(self, wider_or_higher):
+    def get_random_image_with_specific_ratio(self, first_img_ratio):
         while True:
             idx = random.randint(0, len(self.image_paths) - 1)
-            image = Image.open(str(self.image_paths[idx])).convert('RGBA')
-            if get_ratio(image) == wider_or_higher:
+            image_obj = Image.open(str(self.image_paths[idx]))
+            ratio = get_ratio(image_obj)
+            if first_img_ratio == "both":
+                # if the ratio of the original image is "both" all image are valid
+                image = image_obj.convert('RGBA')
                 caption = self.get_captions(idx)
-                return image, caption
+                return image, caption, ratio
+            elif ratio == "both":
+                # if the ratio of the current image is "both" it is valid
+                image = image_obj.convert('RGBA')
+                caption = self.get_captions(idx)
+                return image, caption, first_img_ratio
+            elif first_img_ratio == ratio:
+                # if the ratio of the original image is equal to the current image, it is valid
+                image = image_obj.convert('RGBA')
+                caption = self.get_captions(idx)
+                return image, caption, ratio
 
     def get_image_caption(self, idx=None, ratio=None):
         # select row, by random if there is no idx, else using an index
@@ -240,8 +262,7 @@ class CombineCsvDataset(CsvDataset):
             ratio = get_ratio(image)
             return image, caption, ratio
         else:
-            image, caption = self.get_random_image_with_specific_ratio(ratio)
-            return image, caption, ratio
+            return self.get_random_image_with_specific_ratio(ratio)
 
     def get_captions(self, idx):
         if not self.additional_positives:
@@ -261,11 +282,14 @@ class CombineCsvDataset(CsvDataset):
         caption = [self.captions[idx], *caption2]
         return caption
 
-    def transform_and_random_concat(self, img1, img2, wider_or_higher):
-        if self.clip_loss_iterate:
+    def transform_and_random_concat(self, img1, img2, ratio):
+        if self.clip_loss_iterate or self.baseline:
             # duplicate img1
             img1_copy = img1.copy()
-        if wider_or_higher == "higher":
+        if ratio == "both":
+            # decide at random if it is higher or wider
+            ratio = random.choice(["higher", "wider"])
+        if ratio == "higher":
             # take the last 3 channels
             img1 = self.init_transform_higher(img1)[:3]  # RGBA
             img2 = self.init_transform_higher(img2)[:3]  # RGBA
@@ -283,7 +307,7 @@ class CombineCsvDataset(CsvDataset):
             else:
                 concatenated_img = torch.cat([img2, img1], dim=1)
 
-        if self.clip_loss_iterate:
+        if self.clip_loss_iterate or self.baseline:
             return self.transforms(img1_copy), self.post_transform(concatenated_img)
         else:
             return self.post_transform(concatenated_img)

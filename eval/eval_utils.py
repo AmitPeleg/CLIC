@@ -79,17 +79,17 @@ def load_my_state_dict(model, state_dict):
 class ArgumentsDefault:
     def __init__(self):
         self.seed = 1
-        self.num_workers = 1
-        self.evaluation_metric = 'coco2014_retrival'
+        self.num_workers = 8
+        self.evaluation_metric = 'coco2017_retrival'
         self.imagenet_root = str(local_setting.IMAGENET_DIR)
-        self.coco2014_image_root = str(local_setting.COCO2014_DIR)
         self.flickr30k_image_root = str(local_setting.FLICKR30K_DIR)
         self.coco2017_image_root = str(local_setting.COCO2017_DIR)
+        self.coco2017_annotation_root = str(local_setting.COCO2017_ANNOTATIONS_DIR)
         self.output = str(local_setting.EVAL_DIR)
         self.data_root = str(local_setting.DATA_DIR)
         self.filter_image_idx = False
-        self.batch_size = 128
-        self.model = "ViT-B-16-FineTuned"
-        self.workers = 1
+        self.batch_size = 200
+        self.model = "ViT-B-32"
+        self.workers = 8
         self.quickgelu = False
         self.sugarcrepe_limit = None
