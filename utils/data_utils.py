@@ -116,12 +116,10 @@ def transform_to_list(string):
 
 
 def get_ratio(img):
-    if img.width > img.height:
+    if img.width >= img.height:
         return "wider"
-    elif img.width < img.height:
-        return "higher"
     else:
-        return "both"
+        return "higher"
 
 
 def same_type_words_single_sentence(sentence):
@@ -159,11 +157,12 @@ def same_type_words(text1, text2):
     for pos in common_types:
         # Find common words
         common_words = set(pos_dict1[pos]) & set(pos_dict2[pos])
-
-        # If common words exist, remove it from both dictionaries
+        # If common words exist, remove it from the dictionary with more words
         if common_words:
-            pos_dict1[pos] = list(set(pos_dict1[pos]) - common_words)
-            pos_dict2[pos] = list(set(pos_dict2[pos]) - common_words)
+            if len(pos_dict1[pos]) > len(pos_dict2[pos]):
+                pos_dict1[pos] = list(set(pos_dict1[pos]) - common_words)
+            else:
+                pos_dict2[pos] = list(set(pos_dict2[pos]) - common_words)
 
             # If the dictionary is empty, remove the POS tag from the common types
             if len(pos_dict1[pos]) == 0 or len(pos_dict2[pos]) == 0:
@@ -239,4 +238,4 @@ def random_concat(pos1, pos2):
     pos = [pos1, pos2]
     random.shuffle(pos)
     pos = concat_texts(pos)
-    return pos
+    return pos    
