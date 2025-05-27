@@ -112,4 +112,6 @@ This work uses code/models from:
 
 3. [https://github.com/UCSC-VLAA/CLIPA](https://github.com/UCSC-VLAA/CLIPA)
 
+4. [https://github.com/LijieFan/LaCLIP](https://github.com/LijieFan/LaCLIP)
+
 
