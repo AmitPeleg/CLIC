@@ -157,12 +157,11 @@ def same_type_words(text1, text2):
     for pos in common_types:
         # Find common words
         common_words = set(pos_dict1[pos]) & set(pos_dict2[pos])
-        # If common words exist, remove it from the dictionary with more words
+
+        # If common words exist, remove it from both dictionaries
         if common_words:
-            if len(pos_dict1[pos]) > len(pos_dict2[pos]):
-                pos_dict1[pos] = list(set(pos_dict1[pos]) - common_words)
-            else:
-                pos_dict2[pos] = list(set(pos_dict2[pos]) - common_words)
+            pos_dict1[pos] = list(set(pos_dict1[pos]) - common_words)
+            pos_dict2[pos] = list(set(pos_dict2[pos]) - common_words)
 
             # If the dictionary is empty, remove the POS tag from the common types
             if len(pos_dict1[pos]) == 0 or len(pos_dict2[pos]) == 0:
