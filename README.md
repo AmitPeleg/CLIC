@@ -38,9 +38,9 @@ bash eval.sh
 <div align="center">
 	
 | Model name              | Pre-train key    | CLIC FT-key | CLIC-model HF-link                             |
-|-------------------------|------------|-------------------------|-------------------------------------------|
+|----------------------|------------|-------------------------|-------------------------------------------|
 ViT-B-32-CogVLM  | ViT-B-32 |HF-CLIC-ViT-B-32-224-CogVLM | [HF-Link](https://huggingface.co/nmndeep/CLIC-ViT-B-32-224-CogVLM) |
-ViT-B-32-PixPr-RedCaps  | ViT-B-32 |HF-CLIC-ViT-B-32-224-PixPr-RedCaps| [HF-Link](https://huggingface.co/nmndeep/CLIC-ViT-B-32-224-PixelProse) |
+ViT-B-32-PixPr-RedCaps | ViT-B-32 |HF-CLIC-ViT-B-32-224-PixPr-RedCaps| [HF-Link](https://huggingface.co/nmndeep/CLIC-ViT-B-32-224-PixelProse) |
 ViT-B-16-CogVLM  | ViT-B-16 |HF-CLIC-ViT-B-16-224-CogVLM| [HF-Link](https://huggingface.co/nmndeep/CLIC-ViT-B-16-224-CogVLM) |
 ViT-L-14-CogVLM  | ViT-L-14 |HF-CLIC-ViT-L-14-224-CogVLM| [HF-Link](https://huggingface.co/nmndeep/CLIC-ViT-L-14-224-CogVLM) |
 ViT-L-14-PixPr-RedCaps  | ViT-L-14 |HF-CLIC-ViT-L-14-224-PixPr-RedCaps| [HF-Link](https://huggingface.co/nmndeep/CLIC-ViT-L-14-224-PixelProse) |
