@@ -64,7 +64,7 @@ We fine-tune different models with CLIC using
 The default location for the datasets is in the [`data`](data) folder. 
 You can change the location of each dataset in the [local_settings](local_setting.py) file.
 
-#### 1M subset of the LIAON dataset
+#### 1M subset of the LAION dataset
 ```bash
 mkdir data
 # Download the csv file with the images urls
