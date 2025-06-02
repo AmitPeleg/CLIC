@@ -2,7 +2,7 @@
 
 # Advancing Compositional Awareness in CLIP with Efficient Fine-Tuning
 	
-#### [Project page](https://clic-compositional-clip.github.io/) | [Paper](https://arxiv.org/abs/***) 
+#### [Project page](https://clic-compositional-clip.github.io/) | [Paper](https://arxiv.org/abs/2505.24424) 
 
 </div>
 
